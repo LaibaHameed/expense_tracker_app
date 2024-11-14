@@ -29,3 +29,15 @@ const outfit = Outfit({
 </body>
 
 add in global css
+
+*****************************************************************
+landing page
+
+app/page.js
+app/_components/Header.js
+public/logo.svg
+
+
+
+logoipsum
+haperUI (banner page)

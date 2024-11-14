@@ -1,10 +1,7 @@
+/* Import Tailwind base styles */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* body {
-  font-family: Arial, Helvetica, sans-serif;
-} */
 
 @layer base {
   :root {
@@ -37,6 +34,8 @@
     --font-montserrat: 'Montserrat', sans-serif;
     --font-outfit: 'Outfit', sans-serif;
   }
+  
+  /* Dark theme variables */
   .dark {
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
@@ -65,6 +64,7 @@
   }
 }
 
+/* Apply Tailwind styles to use these variables */
 @layer base {
   * {
     @apply border-border;
@@ -74,18 +74,43 @@
   }
 }
 
-
-/* Set Inter as the default font */
+/* Set default font */
 body {
   font-family: var(--font-outfit);
+  background-color: #030303;
 }
 
 /* Use Montserrat for headings and numbers */
-h1, h2, h3, h4, h5, h6, .heading{
+h1, h2, h3, h4, h5, h6, .heading {
   font-family: var(--font-montserrat);
   font-size: larger;
   font-weight: 600;
 }
+
 .numeric {
   font-family: var(--font-montserrat);
+}
+
+/* Full example to decrease width of horizontal scrollbar */
+.some-container {
+  overflow-x: auto; /* Enable horizontal scrolling */
+  white-space: nowrap; /* Prevent wrapping of content */
+}
+
+::-webkit-scrollbar {
+  height: 6px; /* Thinner horizontal scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: #1f1e1e;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #030303;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
