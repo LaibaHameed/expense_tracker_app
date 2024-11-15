@@ -1,5 +1,8 @@
 import { Inter, Montserrat, Outfit } from "next/font/google";
 import "./globals.css";
+import {
+  ClerkProvider
+} from '@clerk/nextjs'
 
 
 // Import Inter for general text
@@ -25,14 +28,16 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
-  
+
   return (
-    <html lang="en">
-      <body
-        className={`${inter.variable} ${montserrat.variable} ${outfit.variable} antialiased`}
-      >
-        {children}
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body
+          className={`${inter.variable} ${montserrat.variable} ${outfit.variable} antialiased`}
+        >
+          {children}
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
