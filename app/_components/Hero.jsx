@@ -1,7 +1,11 @@
+'use client'
 import React from 'react'
 import Image from 'next/image'
+import Link from 'next/link';
+import { useUser } from '@clerk/nextjs';
 
 const Hero = () => {
+    const { user, isSignedIn } = useUser();
     return (
         <section className="bg-gray-900 text-white flex items-center flex-col">
             {/* */}
@@ -19,16 +23,24 @@ const Hero = () => {
                     </p>
 
                     <div className="mt-8 flex flex-wrap justify-center gap-4">
-                        <a
-                            className="block w-auto rounded border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white hover:bg-transparent hover:text-white focus:outline-none focus:ring active:text-opacity-75 sm:w-auto"
-                            href="#"
-                        >
-                            Get Started
-                        </a>
+                        {isSignedIn ?
+                            <Link
+                                className="block w-auto rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white hover:bg-transparent hover:text-white focus:outline-none focus:ring active:text-opacity-75 sm:w-auto"
+                                href={'/dashboard'}
+                            >
+                                See DashBoard
+                            </Link>
+                            : <Link
+                                className="block w-auto rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white hover:bg-transparent hover:text-white focus:outline-none focus:ring active:text-opacity-75 sm:w-auto"
+                                href={'/sign-in'}
+                            >
+                                Get Started
+                            </Link>
+                        }
                     </div>
                 </div>
             </div>
-            <Image height={700} width={700} src={'/download.jpeg'} alt='logo' className='-mt-9 rounded-xl border-2'/>
+            <Image height={700} width={700} src={'/download.jpeg'} alt='logo' className='-mt-9 rounded-xl border-2' />
         </section>
     )
 }

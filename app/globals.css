@@ -81,11 +81,35 @@ body {
 }
 
 /* Use Montserrat for headings and numbers */
-h1, h2, h3, h4, h5, h6, .heading {
+h1, h2, h3, .heading {
   font-family: var(--font-montserrat);
   font-size: larger;
   font-weight: 600;
 }
+
+h4, h5, h6{
+  font-family: var(--font-montserrat);
+  font-size: medium;
+  font-weight: 400;
+}
+
+.font-mono{
+  font-family: var(--font-montserrat);
+}
+
+/* Box shadows for different effects */
+.dark-glow {
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.6);
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 4px 15px rgba(103, 103, 104, 0.116);
+}
+
+/* .soft-shadow {
+}
+
+.glowing {
+} */
+
 
 .numeric {
   font-family: var(--font-montserrat);

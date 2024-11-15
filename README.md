@@ -47,3 +47,6 @@ authentication
 
 get started --> authentication(clerk authentication) ---> user dashboard 
 public route sign-in sign-up home
+
+*****************************************************************
+side bar of dashboard

@@ -10,7 +10,8 @@ import {
 const page = () => {
   return (
     <div>
-        <UserButton/>
+        {/* <UserButton/> */}
+        DashBoard
     </div>
   )
 }
