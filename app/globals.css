@@ -3,6 +3,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* @import "path-to-shadcn-ui-css/dialog.css";  */
+/* @import "shadcn-ui/dialog.css"; */
+
 @layer base {
   :root {
     --background: 0 0% 100%;

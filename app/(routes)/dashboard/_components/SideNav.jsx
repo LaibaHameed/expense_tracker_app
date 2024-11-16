@@ -39,7 +39,7 @@ const SideNav = () => {
     }, [])
     return (
         <div className='h-screen p-5 dark-glow border border-zinc-900 '>
-            <Image height={100} width={160} src={'./logo.svg'} alt='logo' />
+            <Link href={'/'}><Image height={100} width={160} src={'./logo.svg'} alt='logo' /></Link>
             <div className='pt-10'>
                 {menuList.map((menuItem, index) => (
                     <Link href={menuItem.path} key={index}>

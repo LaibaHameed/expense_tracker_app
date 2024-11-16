@@ -3,6 +3,7 @@ import "./globals.css";
 import {
   ClerkProvider
 } from '@clerk/nextjs'
+import { Toaster } from "@/components/ui/sonner";
 
 
 // Import Inter for general text
@@ -35,6 +36,7 @@ export default function RootLayout({ children }) {
         <body
           className={`${inter.variable} ${montserrat.variable} ${outfit.variable} antialiased`}
         >
+          <Toaster/>
           {children}
         </body>
       </html>

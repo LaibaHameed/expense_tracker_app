@@ -81,3 +81,15 @@ const db = drizzle({ client: sql });
 go to Neon web and sign-up create project and database and from dashboard connection string
 
 configure the drizzle
+make schema 
+
+*****************************************************************
+
+create budgets
+if user have any budgets go to the dashboard
+if not show the budget creation screen
+
+add shadcn ui dialog box
+
+emoji picker
+npm i emoji-picker-react --legacy-peer-deps
