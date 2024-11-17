@@ -83,6 +83,9 @@ go to Neon web and sign-up create project and database and from dashboard connec
 configure the drizzle
 make schema 
 
+npx drizzle-kit studio
+npx drizzle-kit push
+
 *****************************************************************
 
 create budgets

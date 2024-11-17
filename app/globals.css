@@ -107,6 +107,12 @@ h4, h5, h6{
   box-shadow: 0px 4px 15px rgba(103, 103, 104, 0.116);
 }
 
+
+.glow{
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.6);
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 4px 15px rgba(228, 228, 228, 0.116);
+}
 /* .soft-shadow {
 }
 

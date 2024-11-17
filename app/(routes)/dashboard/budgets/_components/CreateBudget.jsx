@@ -11,7 +11,7 @@ import { useUser } from '@clerk/nextjs';
 import { toast } from 'sonner';
 import { eq } from 'drizzle-orm';
 
-const CreateBudget = () => {
+const CreateBudget = ({refreshData}) => {
     const [emojiIcon, setEmojiIcon] = useState('😊');
     const [openEmojiPicker, setOpenEmojiPicker] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -22,7 +22,7 @@ const CreateBudget = () => {
     // Initialize useForm with default values
     const { control, handleSubmit, setValue, formState: { errors } } = useForm({
         defaultValues: {
-            name: '', // Default to an empty string
+            name: '', 
             amount: '', // Default to an empty string
         },
     });
@@ -54,7 +54,7 @@ const CreateBudget = () => {
             const existingBudget = await db
                 .select()
                 .from(Budgets)
-                .where(eq(Budgets.name, budgetName)) // Correct usage of `eq`
+                .where(eq(Budgets.name, budgetName)) 
                 .execute();
 
             setIsNameUnique(existingBudget.length === 0);
@@ -93,8 +93,9 @@ const CreateBudget = () => {
                 .returning({ insertedId: Budgets.id });
 
             if (result) {
+                refreshData()
                 toast.success('New Budget Created!');
-                setIsDialogOpen(false); // Close dialog on success
+                setIsDialogOpen(false); 
             }
         } catch (error) {
             console.error("Error creating budget:", error);
@@ -105,7 +106,7 @@ const CreateBudget = () => {
     return (
         <div>
 
-            <p onClick={() => setIsDialogOpen(true)} className="flex flex-col items-center text-zinc-300 bg-zinc-900 p-10 mt-7 rounded-md border-2 border-dashed cursor-pointer hover:.dark-glow">
+            <p onClick={() => setIsDialogOpen(true)} className="flex flex-col items-center text-zinc-300 bg-zinc-900 p-10 mt-8 rounded-md border-2 border-zinc-500 border-dashed cursor-pointer hover:border-zinc-50 hover:text-white">
                 <span className="text-2xl">+</span>
                 <span>Create New Budget</span>
             </p>
@@ -117,12 +118,12 @@ const CreateBudget = () => {
 
                         <form onSubmit={handleSubmit(onSubmit)}>
                             {/* Emoji Picker */}
-                            {/* <div className="mb-4"> */}
                                 <div className="mb-4 relative">
                                     {/* Emoji Button */}
                                     <Button
+                                        type="button"
                                         variant="outline"
-                                        onClick={() => setOpenEmojiPicker(!openEmojiPicker)} // Toggle emoji picker
+                                        onClick={() => setOpenEmojiPicker(!openEmojiPicker)} 
                                         className="py-4 text-zinc-300 bg-zinc-900 text-3xl"
                                     >
                                         <span>{emojiIcon}</span>
@@ -140,7 +141,6 @@ const CreateBudget = () => {
                                         </div>
                                     )}
                                 </div>
-                            {/* </div> */}
 
                             {/* Name Input */}
                             <div className="mb-2">

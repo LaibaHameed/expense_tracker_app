@@ -43,7 +43,7 @@ const SideNav = () => {
             <div className='pt-10'>
                 {menuList.map((menuItem, index) => (
                     <Link href={menuItem.path} key={index}>
-                        <h4 className={`flex gap-2 items-center text-center text-zinc-400 p-5 mb-2 cursor-pointer hover:text-blue-500 hover:bg-zinc-900 rounded-md ${path == menuItem.path && 'text-blue-600 bg-zinc-900 '}`}>
+                        <h4 className={`flex gap-2 items-center text-center text-zinc-300 p-5 mb-2 cursor-pointer hover:text-blue-500 hover:bg-zinc-900 rounded-md ${path == menuItem.path && 'text-blue-600 bg-zinc-900 '}`}>
                             {menuItem.icon}
                             {menuItem.name}
                         </h4>
