@@ -1,11 +1,4 @@
-// {
-//   "compilerOptions": {
-//     "jsx": "react",
-//     "paths": {
-//       "@/*": ["./*"]
-//     }
-//   }
-// }
+
 {
   "compilerOptions": {
     "jsx": "react",

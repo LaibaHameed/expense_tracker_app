@@ -115,7 +115,6 @@ const CreateBudget = ({refreshData}) => {
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="text-zinc-300 bg-zinc-900 rounded-lg p-5 lg:w-1/3 shadow-lg">
                         <h2 className="text-xl font-bold mb-4 text-center">Create Budget</h2>
-
                         <form onSubmit={handleSubmit(onSubmit)}>
                             {/* Emoji Picker */}
                                 <div className="mb-4 relative">
