@@ -9,8 +9,9 @@ import { db } from '@/utils/dbConfig';
 import { Expenses } from '@/utils/schema';
 import { useUser } from '@clerk/nextjs';
 import { toast } from 'sonner';
+import moment from 'moment/moment';
 
-const ExpensesComp = () => {
+const ExpensesComp = ({refreshData}) => {
     // Use useParams to access route params directly
     const { id } = useParams();  // No need to unwrap with use()
 
@@ -42,13 +43,14 @@ const ExpensesComp = () => {
                     name,
                     amount,
                     budgetId: id,  // Use the dynamic route id as budgetId
-                    createdBy: primaryEmailAddress?.emailAddress,
+                    createdBy: moment().format('DD-MMM-YYYY').toUpperCase()
                 })
                 .returning({ insertedId: Expenses.id });
 
             if (result) {
                 console.log(result);
                 setBudgetData(result);
+                refreshData();
                 toast.success('New Expense Added!');
                 setIsDialogOpen(false);
             }
@@ -62,7 +64,7 @@ const ExpensesComp = () => {
         <>
             <div
                 onClick={() => setIsDialogOpen(true)}
-                className="flex flex-col items-center text-zinc-300 bg-zinc-900 p-10 mt-8 rounded-md border-2 border-zinc-500 border-dashed cursor-pointer hover:border-zinc-50 hover:text-white"
+                className="flex flex-col items-center justify-center text-zinc-300 bg-zinc-900 p-10 mt-8 rounded-md border-2 border-zinc-500 border-dashed cursor-pointer hover:border-zinc-50 hover:text-white"
             >
                 <span className="text-2xl">+</span>
                 <span>Create New Expense</span>
