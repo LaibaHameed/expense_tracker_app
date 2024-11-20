@@ -13,6 +13,8 @@ import { PenBoxIcon, Trash } from 'lucide-react';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import EditBudget from '../_components/EditBudget';
+import Link from 'next/link'
+import { ArrowLeft } from 'lucide-react'
 
 const Page = ({ params }) => {
   const { isLoaded, user } = useUser();
@@ -92,16 +94,21 @@ const Page = ({ params }) => {
     if (userEmail && id) {
       getBudgetInfo();
     }
-  }, [userEmail, id]); // Dependencies updated to trigger when userEmail or id changes
+  }, [userEmail, id]); 
 
   return (
     <div className="p-10">
-      <h1 className="text-zinc-300 flex justify-between">My Expenses
+      <div className="text-zinc-300 flex justify-between">  
+        <h1 className='flex items-center'>
+        <Link href={'/dashboard/budgets'} className='p-1 mx-1 hover:bg-zinc-800 rounded-full'> <ArrowLeft className='text-zinc-300' /> </Link>
+          My Expenses
+        </h1>
+
         <div className='flex items-center justify-center gap-2'>
           <EditBudget budgetInfo={budgetInfo} refreshData={() => getBudgetInfo()} />
-          <Button className='flex gap-2 bg-red-700 shadow-sm hover:shadow-zinc-400' onClick={() => setIsDialogOpen(true)} > <Trash /> Delete </Button>
+          <Button className='flex gap-2 bg-red-700 shadow-sm text-zinc-300 hover:bg-red-800 hover:shadow-zinc-400' onClick={() => setIsDialogOpen(true)} > <Trash /> Delete </Button>
         </div>
-      </h1>
+      </div>
       {isDialogOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
           <div className="flex flex-col justify-center  text-zinc-300 bg-zinc-900 rounded-lg p-10 h-[200px] lg:w-1/3 shadow-lg border-1 border-zinc-400">

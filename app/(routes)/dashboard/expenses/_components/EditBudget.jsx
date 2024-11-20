@@ -97,13 +97,13 @@ const EditBudget = ({ budgetInfo, refreshData }) => {
 
     return (
         <>
-            <Button className="flex gap-2 bg-blue-600 shadow-sm hover:shadow-zinc-400" onClick={() => setIsDialogOpen(true)}>
+            <Button className="flex gap-2 bg-blue-600 hover:bg-blue-700 shadow-sm text-zinc-300 hover:shadow-zinc-400" onClick={() => setIsDialogOpen(true)}>
                 <PenBoxIcon /> Edit
             </Button>
             {isDialogOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="text-zinc-300 bg-zinc-900 rounded-lg p-5 lg:w-1/3 shadow-lg">
-                        <h2 className="text-xl font-bold mb-4 text-center">Edit Budget</h2>
+                        <h2 className="text-xl font-bold mb-4 text-center ">Edit Budget</h2>
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <div className="mb-4 relative">
                                 <Button

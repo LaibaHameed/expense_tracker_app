@@ -6,6 +6,8 @@ import { desc, eq, getTableColumns, sql } from 'drizzle-orm';
 import { Budgets, Expenses } from '@/utils/schema';
 import { useUser } from '@clerk/nextjs';
 import { Trash } from 'lucide-react';
+import Link from 'next/link'
+import { ArrowLeft } from 'lucide-react'
 
 const ExpenseList = () => {
     const { isLoaded, user } = useUser();
@@ -70,7 +72,8 @@ const ExpenseList = () => {
     }, [userEmail]);
 
     return (
-        <div className="m-5">
+        <div className="p-10">
+            <h1 className='text-zinc-300 flex items-center mb-5'> <Link href={'/dashboard'} className='p-1 mx-1 hover:bg-zinc-800 rounded-full'> <ArrowLeft className='text-zinc-300' /> </Link> My Expenses</h1>
             <div className="text-zinc-300 w-full">
                 <div className="grid grid-cols-4 sm:grid-cols-4 p-4 bg-zinc-900 rounded-md my-5">
                     <h4 className="font-bold">Name</h4>

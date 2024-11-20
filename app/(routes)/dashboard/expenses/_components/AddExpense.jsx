@@ -136,6 +136,7 @@ const ExpensesComp = ({ refreshData }) => {
                     </div>
                 </div>
             )}
+            
         </>
     );
 };
