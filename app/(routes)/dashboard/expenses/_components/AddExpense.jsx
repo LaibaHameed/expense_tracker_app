@@ -87,7 +87,7 @@ const ExpensesComp = ({ refreshData }) => {
                                     render={({ field }) => (
                                         <Input
                                             {...field}
-                                            placeholder="e.g., Home Decor"
+                                            placeholder="e.g., bedroom Decor"
                                             onChange={(e) => {
                                                 field.onChange(e);
                                             }}

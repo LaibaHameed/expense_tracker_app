@@ -97,14 +97,14 @@ const Page = ({ params }) => {
   }, [userEmail, id]); 
 
   return (
-    <div className="p-10">
+    <div className="md:p-10 py-10">
       <div className="text-zinc-300 flex justify-between">  
         <h1 className='flex items-center'>
         <Link href={'/dashboard/budgets'} className='p-1 mx-1 hover:bg-zinc-800 rounded-full'> <ArrowLeft className='text-zinc-300' /> </Link>
           My Expenses
         </h1>
 
-        <div className='flex items-center justify-center gap-2'>
+        <div className='flex items-center justify-center gap-2 sm:flex-col'>
           <EditBudget budgetInfo={budgetInfo} refreshData={() => getBudgetInfo()} />
           <Button className='flex gap-2 bg-red-700 shadow-sm text-zinc-300 hover:bg-red-800 hover:shadow-zinc-400' onClick={() => setIsDialogOpen(true)} > <Trash /> Delete </Button>
         </div>

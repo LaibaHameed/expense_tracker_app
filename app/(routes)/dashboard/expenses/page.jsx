@@ -72,7 +72,7 @@ const ExpenseList = () => {
     }, [userEmail]);
 
     return (
-        <div className="p-10">
+        <div className="md:p-10 py-10">
             <h1 className='text-zinc-300 flex items-center mb-5'> <Link href={'/dashboard'} className='p-1 mx-1 hover:bg-zinc-800 rounded-full'> <ArrowLeft className='text-zinc-300' /> </Link> My Expenses</h1>
             <div className="text-zinc-300 w-full">
                 <div className="grid grid-cols-4 sm:grid-cols-4 p-4 bg-zinc-900 rounded-md my-5">

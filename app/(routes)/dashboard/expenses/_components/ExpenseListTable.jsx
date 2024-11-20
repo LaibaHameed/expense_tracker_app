@@ -55,7 +55,7 @@ const ExpenseListTable = ({ params, refreshData }) => {
             <div className="grid grid-cols-4 p-4 bg-zinc-900 rounded-md my-5">
                 <h4 className="font-bold">Name</h4>
                 <h4 className="font-bold">Amount</h4>
-                <h4>Date</h4>
+                <h4 className="font-bold">Date</h4>
                 <h4 className="font-bold">Action</h4>
             </div>
 
