@@ -9,9 +9,10 @@ import BudgetItem from '../../budgets/_components/BudgetItem';
 import AddExpense from '../_components/AddExpense'
 import ExpenseListTable from '../_components/ExpenseListTable';
 import { Button } from '@/components/ui/button';
-import { Trash } from 'lucide-react';
+import { PenBoxIcon, Trash } from 'lucide-react';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import EditBudget from '../_components/EditBudget';
 
 const Page = ({ params }) => {
   const { isLoaded, user } = useUser();
@@ -96,7 +97,10 @@ const Page = ({ params }) => {
   return (
     <div className="p-10">
       <h1 className="text-zinc-300 flex justify-between">My Expenses
-        <Button className='flex gap-2 bg-red-700 shadow-sm hover:shadow-zinc-400' onClick={() => setIsDialogOpen(true)} > <Trash /> Delete </Button>
+        <div className='flex items-center justify-center gap-2'>
+          <EditBudget budgetInfo={budgetInfo} refreshData={() => getBudgetInfo()} />
+          <Button className='flex gap-2 bg-red-700 shadow-sm hover:shadow-zinc-400' onClick={() => setIsDialogOpen(true)} > <Trash /> Delete </Button>
+        </div>
       </h1>
       {isDialogOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">

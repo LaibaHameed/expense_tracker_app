@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation'; // Hook to access route params
+import React, { useState } from 'react';
+import { useParams } from 'next/navigation'; 
 import { useForm, Controller } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -11,11 +11,9 @@ import { useUser } from '@clerk/nextjs';
 import { toast } from 'sonner';
 import moment from 'moment/moment';
 
-const ExpensesComp = ({refreshData}) => {
-    // Use useParams to access route params directly
-    const { id } = useParams();  // No need to unwrap with use()
-
-    const { control, handleSubmit, setValue, formState: { errors } } = useForm({
+const ExpensesComp = ({ refreshData }) => {
+    const { id } = useParams();  
+    const { control, handleSubmit, setValue, reset, formState: { errors } } = useForm({
         defaultValues: {
             name: '',
             amount: '',
@@ -25,9 +23,7 @@ const ExpensesComp = ({refreshData}) => {
     const [budgetData, setBudgetData] = useState([]);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-    // Extract user info directly from Clerk
     const { user } = useUser();
-    const { primaryEmailAddress } = user || {}; 
 
     const onSubmit = async (data) => {
         if (!user) {
@@ -42,10 +38,11 @@ const ExpensesComp = ({refreshData}) => {
                 .values({
                     name,
                     amount,
-                    budgetId: id,  // Use the dynamic route id as budgetId
+                    budgetId: id,  
                     createdBy: moment().format('DD-MMM-YYYY').toUpperCase()
                 })
                 .returning({ insertedId: Expenses.id });
+
 
             if (result) {
                 console.log(result);
@@ -53,6 +50,11 @@ const ExpensesComp = ({refreshData}) => {
                 refreshData();
                 toast.success('New Expense Added!');
                 setIsDialogOpen(false);
+
+                reset({
+                    name: '',
+                    amount: '',
+                });
             }
         } catch (error) {
             console.error('Error creating expense:', error);

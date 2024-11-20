@@ -7,8 +7,7 @@ import { useUser } from '@clerk/nextjs';
 const Hero = () => {
     const { user, isSignedIn } = useUser();
     return (
-        <section className="bg-gray-900 text-white flex items-center flex-col">
-            {/* */}
+        <section className="bg-zinc-950 text-white flex items-center flex-col">
             <div className="mx-auto max-w-screen-xl px-4 py-32 lg:flex lg:h-screen lg:items-center">
                 <div className="mx-auto max-w-3xl text-center">
                     <h1
@@ -40,7 +39,7 @@ const Hero = () => {
                     </div>
                 </div>
             </div>
-            <Image height={700} width={700} src={'/download.jpeg'} alt='logo' className='-mt-9 rounded-xl border-2' />
+            <Image height={700} width={700} src={'/home.png'} alt='logo' className='-mt-9 rounded-xl border-2' />
         </section>
     )
 }

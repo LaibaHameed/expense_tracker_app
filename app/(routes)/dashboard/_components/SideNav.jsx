@@ -6,7 +6,7 @@ import { UserButton } from '@clerk/nextjs'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 
-const SideNav = () => {
+const SideNav = ({ setIsSideNavOpen }) => {
     const menuList = [
         {
             id: 1,
@@ -38,11 +38,12 @@ const SideNav = () => {
         console.log(path);
     }, [])
     return (
-        <div className='h-screen p-5 dark-glow border border-zinc-900 '>
+        <div className='min-h-screen p-5 dark-glow border border-zinc-900 flex flex-col justify-between'>
+            <div>
             <Link href={'/'}><Image height={100} width={160} src={'./logo.svg'} alt='logo' /></Link>
             <div className='pt-10'>
                 {menuList.map((menuItem, index) => (
-                    <Link href={menuItem.path} key={index}>
+                    <Link href={menuItem.path} key={index} onClick={() => setIsSideNavOpen(false)} >
                         <h4 className={`flex gap-2 items-center text-center text-zinc-300 p-5 mb-2 cursor-pointer hover:text-blue-500 hover:bg-zinc-900 rounded-md ${path == menuItem.path && 'text-blue-600 bg-zinc-900 '}`}>
                             {menuItem.icon}
                             {menuItem.name}
@@ -51,7 +52,8 @@ const SideNav = () => {
                 ))}
 
             </div>
-            <div className='fixed bottom-5 flex gap-2 p-5 items-center justify-center text-zinc-400 text-lg font-medium font-mono '>
+            </div>
+            <div className='bottom-5 flex gap-2 p-5 items-start text-zinc-400 text-lg font-medium font-mono '>
                 <UserButton />
                 Profile
             </div>

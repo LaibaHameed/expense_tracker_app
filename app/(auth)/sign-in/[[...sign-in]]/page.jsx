@@ -1,7 +1,8 @@
 import { SignIn } from '@clerk/nextjs'
 
 export default function Page() {
-    return <section className="bg-white dark:bg-gray-900">
+    
+    return <section className="bg-zinc-950">
         <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
             <aside className="relative block h-16 lg:order-last lg:col-span-5 lg:h-full xl:col-span-6">
                 <img
@@ -19,7 +20,7 @@ export default function Page() {
                         <span className="sr-only">Home</span>
                     </a>
 
-                    <SignIn />
+                    <SignIn theme="dark" />
                 </div>
             </main>
         </div>

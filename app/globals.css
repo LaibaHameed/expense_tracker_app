@@ -124,26 +124,17 @@ h4, h5, h6{
   font-family: var(--font-montserrat);
 }
 
-/* Full example to decrease width of horizontal scrollbar */
-.some-container {
-  overflow-x: auto; /* Enable horizontal scrolling */
-  white-space: nowrap; /* Prevent wrapping of content */
-}
-
+/* Remove scrollbar for WebKit browsers (Chrome, Safari, newer versions of Edge) */
 ::-webkit-scrollbar {
-  height: 6px; /* Thinner horizontal scrollbar */
+  display: none;
 }
 
-::-webkit-scrollbar-track {
-  background: #1f1e1e;
-  border-radius: 10px;
+/* Remove scrollbar for Firefox */
+html {
+  scrollbar-width: none; /* "auto" or "thin" is default */
 }
 
-::-webkit-scrollbar-thumb {
-  background: #030303;
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
+/* Remove scrollbar for Internet Explorer */
+body {
+  -ms-overflow-style: none; /* For Internet Explorer */
 }

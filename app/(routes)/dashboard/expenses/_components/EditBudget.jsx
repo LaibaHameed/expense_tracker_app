@@ -1,42 +1,39 @@
+'use client';
+
 import React, { useState, useEffect, useCallback } from 'react';
+import { PenBoxIcon } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import EmojiPicker from 'emoji-picker-react';
 import { db } from '@/utils/dbConfig';
 import { Budgets } from '@/utils/schema';
-import { useUser } from '@clerk/nextjs';
 import { toast } from 'sonner';
 import { eq } from 'drizzle-orm';
 
-const CreateBudget = ({ refreshData }) => {
-    const [emojiIcon, setEmojiIcon] = useState('😊');
+const EditBudget = ({ budgetInfo, refreshData }) => {
+    const [emojiIcon, setEmojiIcon] = useState(budgetInfo?.icon || '');
     const [openEmojiPicker, setOpenEmojiPicker] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [userEmail, setUserEmail] = useState(null);
-    const [isNameUnique, setIsNameUnique] = useState(true); 
-    const { isLoaded, user } = useUser();
+    const [isNameUnique, setIsNameUnique] = useState(true);
 
-    // Initialize useForm with default values
     const { control, handleSubmit, setValue, reset, formState: { errors } } = useForm({
         defaultValues: {
-            name: '',
-            amount: '',
+            name: budgetInfo?.name || '',
+            amount: budgetInfo?.amount || 0,
         },
     });
 
-    // Fetch user email
     useEffect(() => {
-        const fetchUserEmail = async () => {
-            if (isLoaded && user) {
-                const email = user?.primaryEmailAddress?.emailAddress || "Email not available";
-                setUserEmail(email);
-            }
-        };
-        fetchUserEmail();
-    }, [isLoaded, user]);
+        if (budgetInfo) {
+            reset({
+                name: budgetInfo?.name || '',
+                amount: budgetInfo?.amount || 0,
+            });
+            setEmojiIcon(budgetInfo?.icon || '');
+        }
+    }, [budgetInfo, reset]);
 
-    // Debounce function for checking budget name uniqueness
     const debounce = (func, delay) => {
         let timer;
         return (...args) => {
@@ -45,40 +42,29 @@ const CreateBudget = ({ refreshData }) => {
         };
     };
 
-    // Check if the budget name is unique for the current user
     const checkBudgetName = async (budgetName) => {
-        if (!budgetName || !userEmail) return; 
+        if (!budgetName) return;
         try {
             const existingBudget = await db
                 .select()
                 .from(Budgets)
-                .where(eq(Budgets.createdBy, userEmail))
                 .where(eq(Budgets.name, budgetName))
                 .execute();
 
-
-            console.log(Budgets.createdBy, userEmail);
-            console.log(existingBudget);
-
-            if (existingBudget.length === 0) {
-                setIsNameUnique(true)
-            }
-
+            setIsNameUnique(existingBudget.length === 0);
         } catch (error) {
             console.error("Error checking budget name:", error);
-            setIsNameUnique(true); 
+            setIsNameUnique(true);
         }
     };
 
-    // Debounced version of the checkBudgetName
     const debouncedCheckBudgetName = useCallback(
         debounce(async (budgetName) => {
             await checkBudgetName(budgetName);
         }, 500),
-        [userEmail] 
+        []
     );
 
-    // Handle name change and trigger the debounced check
     const handleNameChange = (e) => {
         const inputName = e.target.value;
         setValue('name', inputName);
@@ -87,78 +73,60 @@ const CreateBudget = ({ refreshData }) => {
 
     const onSubmit = async (data) => {
         const { name, amount } = data;
-        if (!isNameUnique) {
-            toast.error('Budget name already exists!');
-            return; 
-        }
-
         try {
             const result = await db
-                .insert(Budgets)
-                .values({
+                .update(Budgets)
+                .set({
                     name,
                     amount,
                     icon: emojiIcon,
-                    createdBy: userEmail,
                 })
-                .returning({ insertedId: Budgets.id });
+                .where(eq(Budgets.id, budgetInfo?.id))
+                .returning();
 
             if (result) {
-                refreshData(); 
-                toast.success('New Budget Created!');
-                setIsDialogOpen(false); 
-                reset({
-                    name: '',
-                    amount: '',
-                });
+                toast.success('Budget Updated!');
+                setIsDialogOpen(false);
+                refreshData();
             }
         } catch (error) {
-            console.error("Error creating budget:", error);
-            toast.error('An error occurred while creating the budget.');
+            console.error("Error updating budget:", error);
+            toast.error('An error occurred while updating the budget.');
         }
     };
 
     return (
-        <div>
-            <p onClick={() => setIsDialogOpen(true)} className="flex flex-col items-center text-zinc-300 bg-zinc-900 p-10 mt-8 rounded-md border-2 border-zinc-500 border-dashed cursor-pointer hover:border-zinc-50 hover:text-white">
-                <span className="text-2xl">+</span>
-                <span>Create New Budget</span>
-            </p>
-
+        <>
+            <Button className="flex gap-2 bg-blue-600 shadow-sm hover:shadow-zinc-400" onClick={() => setIsDialogOpen(true)}>
+                <PenBoxIcon /> Edit
+            </Button>
             {isDialogOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="text-zinc-300 bg-zinc-900 rounded-lg p-5 lg:w-1/3 shadow-lg">
-                        <h2 className="text-xl font-bold mb-4 text-center">Create Budget</h2>
+                        <h2 className="text-xl font-bold mb-4 text-center">Edit Budget</h2>
                         <form onSubmit={handleSubmit(onSubmit)}>
-                            {/* Emoji Picker */}
                             <div className="mb-4 relative">
                                 <Button
                                     type="button"
                                     variant="outline"
                                     onClick={() => setOpenEmojiPicker(!openEmojiPicker)}
-                                    className="py-4 bg-zinc-900 text-3xl hover:bg-zinc-800"
+                                    className="py-4 text-zinc-300 bg-zinc-900 text-3xl"
                                 >
                                     <span>{emojiIcon}</span>
                                 </Button>
 
                                 {openEmojiPicker && (
-                                    <div className="absolute z-50 mt-2 p-2 border rounded bg-zinc-900 shadow-lg">
+                                    <div className="absolute z-50 mt-2 p-2 border rounded bg-white shadow-lg">
                                         <EmojiPicker
                                             onEmojiClick={(e) => {
                                                 setEmojiIcon(e.emoji);
                                                 setOpenEmojiPicker(false);
                                             }}
-                                            theme="dark"  
-                                            searchPlaceholder="Search Emojis"
-                                            emojiStyle="native"
-                                            previewConfig={{ showPreview: false }} 
-                                            height={350}
                                         />
                                     </div>
                                 )}
                             </div>
 
-                            {/* Name Input */}
                             <div className="mb-2">
                                 <label className="block text-sm font-medium p-2">Budget Name</label>
                                 <Controller
@@ -176,41 +144,23 @@ const CreateBudget = ({ refreshData }) => {
                                         />
                                     )}
                                 />
-                                {errors.name && (
-                                    <p className="text-red-500 text-sm">{errors.name.message}</p>
-                                )}
-                                {!isNameUnique && (
-                                    <p className="text-red-500 text-sm">Budget name already exists!</p>
-                                )}
+                                {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
+                                {!isNameUnique && <p className="text-red-500 text-sm">Budget name already exists!</p>}
                             </div>
 
-                            {/* Amount Input */}
                             <div className="mb-4">
                                 <label className="block text-sm font-medium p-2">Budget Amount</label>
                                 <Controller
                                     name="amount"
                                     control={control}
                                     rules={{ required: "Budget amount is required" }}
-                                    render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            type="number"
-                                            placeholder="e.g., 5000"
-                                        />
-                                    )}
+                                    render={({ field }) => <Input {...field} type="number" placeholder="e.g., 5000" />}
                                 />
-                                {errors.amount && (
-                                    <p className="text-red-500 text-sm">{errors.amount.message}</p>
-                                )}
+                                {errors.amount && <p className="text-red-500 text-sm">{errors.amount.message}</p>}
                             </div>
 
-                            {/* Actions */}
                             <div className="flex justify-end space-x-2">
-                                <Button
-                                    onClick={() => setIsDialogOpen(false)}
-                                    type="button"
-                                    className="bg-gray-300 text-black px-4 py-2 rounded hover:text-zinc-200 hover:bg-slate-500"
-                                >
+                                <Button onClick={() => setIsDialogOpen(false)} type="button" className="bg-gray-300 text-black px-4 py-2 rounded hover:text-zinc-200 hover:bg-slate-500">
                                     Cancel
                                 </Button>
                                 <Button
@@ -218,15 +168,15 @@ const CreateBudget = ({ refreshData }) => {
                                     className="bg-blue-600 text-zinc-200 px-4 py-2 rounded hover:bg-blue-800"
                                     disabled={!isNameUnique}
                                 >
-                                    Create
+                                    Update
                                 </Button>
                             </div>
                         </form>
                     </div>
                 </div>
             )}
-        </div>
+        </>
     );
 };
 
-export default CreateBudget;
+export default EditBudget;
