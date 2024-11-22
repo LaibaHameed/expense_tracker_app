@@ -1,5 +1,3 @@
-
-
 ### Project Structure
 
 expense_tracker_app/

@@ -1,23 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import EmojiPicker from 'emoji-picker-react';
-import { db } from '@/utils/dbConfig';
-import { Budgets } from '@/utils/schema';
-import { useUser } from '@clerk/nextjs';
-import { toast } from 'sonner';
-import { eq } from 'drizzle-orm';
+import { Loader, LoaderCircle, SplineIcon } from "lucide-react";
 
 const CreateBudget = ({ refreshData }) => {
     const [emojiIcon, setEmojiIcon] = useState('😊');
     const [openEmojiPicker, setOpenEmojiPicker] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [userEmail, setUserEmail] = useState(null);
-    const [isNameUnique, setIsNameUnique] = useState(true); 
+    const [isNameUnique, setIsNameUnique] = useState(true);
+    const [loading, setLoading] = useState(false); // Added loading state
     const { isLoaded, user } = useUser();
 
-    // Initialize useForm with default values
     const { control, handleSubmit, setValue, reset, formState: { errors } } = useForm({
         defaultValues: {
             name: '',
@@ -25,7 +16,6 @@ const CreateBudget = ({ refreshData }) => {
         },
     });
 
-    // Fetch user email
     useEffect(() => {
         const fetchUserEmail = async () => {
             if (isLoaded && user) {
@@ -36,7 +26,6 @@ const CreateBudget = ({ refreshData }) => {
         fetchUserEmail();
     }, [isLoaded, user]);
 
-    // Debounce function for checking budget name uniqueness
     const debounce = (func, delay) => {
         let timer;
         return (...args) => {
@@ -45,9 +34,8 @@ const CreateBudget = ({ refreshData }) => {
         };
     };
 
-    // Check if the budget name is unique for the current user
     const checkBudgetName = async (budgetName) => {
-        if (!budgetName || !userEmail) return; 
+        if (!budgetName || !userEmail) return;
         try {
             const existingBudget = await db
                 .select()
@@ -56,25 +44,20 @@ const CreateBudget = ({ refreshData }) => {
                 .where(eq(Budgets.name, budgetName))
                 .execute();
 
-            if (existingBudget.length === 0) {
-                setIsNameUnique(true)
-            }
-
+            setIsNameUnique(existingBudget.length === 0);
         } catch (error) {
             console.error("Error checking budget name:", error);
-            setIsNameUnique(true); 
+            setIsNameUnique(true);
         }
     };
 
-    // Debounced version of the checkBudgetName
     const debouncedCheckBudgetName = useCallback(
         debounce(async (budgetName) => {
             await checkBudgetName(budgetName);
         }, 500),
-        [userEmail] 
+        [userEmail]
     );
 
-    // Handle name change and trigger the debounced check
     const handleNameChange = (e) => {
         const inputName = e.target.value;
         setValue('name', inputName);
@@ -85,9 +68,10 @@ const CreateBudget = ({ refreshData }) => {
         const { name, amount } = data;
         if (!isNameUnique) {
             toast.error('Budget name already exists!');
-            return; 
+            return;
         }
 
+        setLoading(true); // Set loading to true when submission starts
         try {
             const result = await db
                 .insert(Budgets)
@@ -100,9 +84,9 @@ const CreateBudget = ({ refreshData }) => {
                 .returning({ insertedId: Budgets.id });
 
             if (result) {
-                refreshData(); 
+                refreshData();
                 toast.success('New Budget Created!');
-                setIsDialogOpen(false); 
+                setIsDialogOpen(false);
                 reset({
                     name: '',
                     amount: '',
@@ -111,6 +95,8 @@ const CreateBudget = ({ refreshData }) => {
         } catch (error) {
             console.error("Error creating budget:", error);
             toast.error('An error occurred while creating the budget.');
+        } finally {
+            setLoading(false); // Reset loading state after submission
         }
     };
 
@@ -126,7 +112,6 @@ const CreateBudget = ({ refreshData }) => {
                     <div className="text-zinc-300 bg-zinc-900 rounded-lg p-5 lg:w-1/3 shadow-lg">
                         <h2 className="text-xl font-bold mb-4 text-center">Create Budget</h2>
                         <form onSubmit={handleSubmit(onSubmit)}>
-                            {/* Emoji Picker */}
                             <div className="mb-4 relative">
                                 <Button
                                     type="button"
@@ -144,17 +129,16 @@ const CreateBudget = ({ refreshData }) => {
                                                 setEmojiIcon(e.emoji);
                                                 setOpenEmojiPicker(false);
                                             }}
-                                            theme="dark"  
+                                            theme="dark"
                                             searchPlaceholder="Search Emojis"
                                             emojiStyle="native"
-                                            previewConfig={{ showPreview: false }} 
+                                            previewConfig={{ showPreview: false }}
                                             height={350}
                                         />
                                     </div>
                                 )}
                             </div>
 
-                            {/* Name Input */}
                             <div className="mb-2">
                                 <label className="block text-sm font-medium p-2">Budget Name</label>
                                 <Controller
@@ -180,7 +164,6 @@ const CreateBudget = ({ refreshData }) => {
                                 )}
                             </div>
 
-                            {/* Amount Input */}
                             <div className="mb-4">
                                 <label className="block text-sm font-medium p-2">Budget Amount</label>
                                 <Controller
@@ -200,7 +183,6 @@ const CreateBudget = ({ refreshData }) => {
                                 )}
                             </div>
 
-                            {/* Actions */}
                             <div className="flex justify-end space-x-2">
                                 <Button
                                     onClick={() => setIsDialogOpen(false)}
@@ -212,9 +194,9 @@ const CreateBudget = ({ refreshData }) => {
                                 <Button
                                     type="submit"
                                     className="bg-blue-600 text-zinc-200 px-4 py-2 rounded hover:bg-blue-800"
-                                    disabled={!isNameUnique}
+                                    disabled={loading || !isNameUnique} 
                                 >
-                                    Create
+                                    {loading ? <LoaderCircle className="animate-spin text-zinc-200"/> : "Create"} 
                                 </Button>
                             </div>
                         </form>

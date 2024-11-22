@@ -10,10 +10,11 @@ import { Expenses } from '@/utils/schema';
 import { useUser } from '@clerk/nextjs';
 import { toast } from 'sonner';
 import moment from 'moment/moment';
+import { LoaderCircleIcon } from 'lucide-react';
 
 const ExpensesComp = ({ refreshData }) => {
     const { id } = useParams();  
-    const { control, handleSubmit, setValue, reset, formState: { errors } } = useForm({
+    const { control, handleSubmit, reset, formState: { errors } } = useForm({
         defaultValues: {
             name: '',
             amount: '',
@@ -22,7 +23,7 @@ const ExpensesComp = ({ refreshData }) => {
 
     const [budgetData, setBudgetData] = useState([]);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-
+    const [loading, setLoading] = useState(false); // Added loading state
     const { user } = useUser();
 
     const onSubmit = async (data) => {
@@ -32,6 +33,8 @@ const ExpensesComp = ({ refreshData }) => {
         }
 
         const { name, amount } = data;
+
+        setLoading(true); // Set loading to true when submission starts
         try {
             const result = await db
                 .insert(Expenses)
@@ -39,10 +42,9 @@ const ExpensesComp = ({ refreshData }) => {
                     name,
                     amount,
                     budgetId: id,  
-                    createdBy: moment().format('DD-MMM-YYYY').toUpperCase()
+                    createdBy: moment().format('DD-MMM-YYYY').toUpperCase(),
                 })
                 .returning({ insertedId: Expenses.id });
-
 
             if (result) {
                 console.log(result);
@@ -59,6 +61,8 @@ const ExpensesComp = ({ refreshData }) => {
         } catch (error) {
             console.error('Error creating expense:', error);
             toast.error('An error occurred while creating the expense.');
+        } finally {
+            setLoading(false); // Reset loading state after submission
         }
     };
 
@@ -87,13 +91,13 @@ const ExpensesComp = ({ refreshData }) => {
                                     render={({ field }) => (
                                         <Input
                                             {...field}
-                                            placeholder="e.g., bedroom Decor"
-                                            onChange={(e) => {
-                                                field.onChange(e);
-                                            }}
+                                            placeholder="e.g., Bedroom Decor"
                                         />
                                     )}
                                 />
+                                {errors.name && (
+                                    <p className="text-red-500 text-sm">{errors.name.message}</p>
+                                )}
                             </div>
 
                             {/* Amount Input */}
@@ -128,15 +132,15 @@ const ExpensesComp = ({ refreshData }) => {
                                 <Button
                                     type="submit"
                                     className="bg-blue-600 text-zinc-200 px-4 py-2 rounded hover:bg-blue-800"
+                                    disabled={loading} // Disable button during loading
                                 >
-                                    Add
+                                    {loading ? <LoaderCircleIcon className='animate-spin text-zinc-200'/> : "Add"} {/* Show loading text */}
                                 </Button>
                             </div>
                         </form>
                     </div>
                 </div>
             )}
-            
         </>
     );
 };
