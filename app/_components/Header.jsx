@@ -20,7 +20,7 @@ const Header = () => {
                     <UserButton />
                 ) : (
                     <button
-                        className="group relative inline-flex items-center overflow-hidden rounded bg-blue-500 px-8 py-3 text-white focus:outline-none focus:ring active:bg-indigo-500"
+                        className="group relative inline-flex items-center overflow-hidden rounded bg-blue-500 md:px-8 md:py-3 py-1 px-3 text-white focus:outline-none focus:ring active:bg-indigo-500"
                         href="#"
                     >
                         <span className="absolute -end-full transition-all group-hover:end-4">

@@ -56,10 +56,6 @@ const CreateBudget = ({ refreshData }) => {
                 .where(eq(Budgets.name, budgetName))
                 .execute();
 
-
-            console.log(Budgets.createdBy, userEmail);
-            console.log(existingBudget);
-
             if (existingBudget.length === 0) {
                 setIsNameUnique(true)
             }

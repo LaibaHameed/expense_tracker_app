@@ -27,8 +27,6 @@ const BudgetList = () => {
   const getBudgetList = async () => {
     if (!userEmail) return;
 
-    console.log("Executing query for userEmail:", userEmail); 
-
     setIsLoading(true);  
 
     try {

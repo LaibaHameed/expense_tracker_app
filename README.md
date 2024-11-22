@@ -1,102 +1,132 @@
-npx create-next-app@latest
+# Expense Tracker App
 
-What is your project named? ... expense_tracker_app
-√ Would you like to use TypeScript? ... No 
-√ Would you like to use ESLint? ... No 
-√ Would you like to use Tailwind CSS? ...  Yes
-√ Would you like your code inside a `src/` directory? ... No 
-√ Would you like to use App Router? (recommended) ... Yes
-√ Would you like to use Turbopack for next dev? ... No 
-√ Would you like to customize the import alias (@/* by default)? ... No 
+An intuitive application to manage your expenses and budgets efficiently.
 
+---
 
-npx shadcn@latest init -d
-npx shadcn@latest add button
+## Technologies Used
 
-npm run dev
+- **Next.js**: For building the frontend and backend of the application.
+- **Drizzle ORM**: To handle database operations and schema management.
+- **PostgreSQL**: As the database for storing application data.
+- **Neon**: A serverless PostgreSQL platform for hosting the database.
+- **Clerk**: For user authentication and management.
+- **TailwindCSS**: For styling the application with ease.
 
-add fonts
-npm install @next/font
+---
 
-import { Inter, Montserrat, Outfit } from "next/font/google";
-const outfit = Outfit({
-  subsets: ["latin"],
-  variable: "--font-outfit",
-});
+## Features
 
-<body className={ `${inter.variable} ${montserrat.variable} ${outfit.variable} antialiased` } >
-    {children}
-</body>
+- User authentication with Clerk (Sign Up, Sign In).
+- Dashboard to view budgets and expenses.
+- Create, edit, and delete budgets.
+- Add, edit, and delete expenses under specific budgets.
+- Visual representation of budgets and expenses through charts.
+- Responsive design with TailwindCSS.
 
-add in global css
+---
 
-*****************************************************************
-landing page
+## Installation Guidelines
 
-app/page.js
-app/_components/Header.js
-public/logo.svg
+### Prerequisites
 
+1. Create accounts for the following:
+   - [Neon](https://neon.tech/) (for PostgreSQL hosting).
+   - [Drizzle ORM](https://orm.drizzle.team/) (for database operations).
+   - [Clerk](https://clerk.dev/) (for authentication).
 
+### Steps
 
-logoipsum
-haperUI (banner page)
+1. **Clone the repository**:  
+   - Download the project by cloning the repository to your local machine.  
+   - Navigate into the project directory.
 
-*****************************************************************
-authentication
+2. **Install dependencies**:  
+   - Install the required dependencies to run the application.
 
-get started --> authentication(clerk authentication) ---> user dashboard 
-public route sign-in sign-up home
+3. **Set up environment variables**:  
+   - Create a `.env` file in the root directory and configure the following variables:  
+     - `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=<Your Clerk Publishable Key>`  
+     - `CLERK_SECRET_KEY=<Your Clerk Secret Key>`  
+     - `NEXT_PUBLIC_CLERK_SIGN_IN_URL=<Your Clerk Sign-In URL>`  
+     - `NEXT_PUBLIC_CLERK_SIGN_UP_URL=<Your Clerk Sign-Up URL>`  
+     - `NEXT_PUBLIC_DATABASE_URL=<Your Neon Database URL>`
 
-*****************************************************************
-side bar of dashboard:
-const path = usePathname();
-    useEffect(() => {
-        console.log(path);
-    }, [])
-    {menuList.map((menuItem, index) => (
-      <Link href={menuItem.path} key={index}>
-        <h4 className={`flex gap-2 items-center text-center text-zinc-400 p-5 mb-2 cursor-pointer hover:text-blue-500 hover:bg-zinc-900 rounded-md ${path == menuItem.path && 'text-blue-600 bg-zinc-900 '}`} >
-          {menuItem.icon}
-          {menuItem.name}
-        </h4>
-      </Link>              
-    ) ) }
+4. **Run the database**:  
+   - Push the database schema to Neon using Drizzle ORM.  
+   - Open the database studio to inspect and manage the database visually.
 
-*****************************************************************
+5. **Start the server**:  
+   - Run the development server to start the application.
 
-Backend setup
-Drizzal ORM -> Postgre -> Neon
+### Project Structure
 
-npm i drizzle-orm @neondatabase/serverless --legacy-peer-deps
-npm i -D drizzle-kit --legacy-peer-deps
-
-dbConfig.js file
-<!-- Drizzle <> Neon Postgres -->
-import { neon } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-http';
-const sql = neon(process.env.DATABASE_URL!);
-const db = drizzle({ client: sql });
-
-go to Neon web and sign-up create project and database and from dashboard connection string
-
-configure the drizzle
-make schema 
-
-npx drizzle-kit studio
-npx drizzle-kit push
-
-*****************************************************************
-
-create budgets
-if user have any budgets go to the dashboard
-if not show the budget creation screen
-
-add shadcn ui dialog box
-
-emoji picker
-npm i emoji-picker-react --legacy-peer-deps
-
-
-
-npm i moment
+expense_tracker_app/
+|
+|--- public/
+|         |--- (Static files like images, icons, etc.)
+|
+|--- components/
+|         |--- ui/
+|               |--- button.jsx
+|               |--- sonner.jsx
+|
+|--- app/
+|     |--- layout.jsx (Main layout of the app)
+|     |--- page.jsx (Home page)
+|     |--- global.css (Global styles)
+|     |
+|     |--- (auth)/
+|     |      |--- sign-in/
+|     |              |--- [[...sign-in]]/page.jsx
+|     |      |--- sign-up/
+|     |              |--- [[...sign-up]]/page.jsx
+|     |
+|     |--- (routes)/
+|     |        |--- dashboard/
+|     |             |--- layout.jsx
+|     |             |--- page.jsx
+|     |             |--- _components/
+|     |             |        |--- CardInfo.jsx
+|     |             |        |--- DashBoardChart.jsx
+|     |             |        |--- DashBoardExpenseList.jsx
+|     |             |        |--- SideNav.jsx
+|     |             |
+|     |             |--- budgets/
+|     |             |        |--- page.jsx
+|     |             |        |--- _components/
+|     |             |              |--- CreateBudget.jsx
+|     |             |              |--- BudgetItem.jsx
+|     |             |              |--- BudgetList.jsx
+|     |             |
+|     |             |--- expenses/
+|     |             |        |--- page.jsx
+|     |             |        |--- [id]/
+|     |             |             |--- page.jsx
+|     |             |        |--- _components/
+|     |             |              |--- AddExpense.jsx
+|     |             |              |--- EditBudget.jsx
+|     |             |              |--- ExpenseList.jsx
+|     |             |
+|     |             |--- upgrade/
+|     |                     |--- page.jsx
+|     |
+|     |--- components/
+|     |         |--- Header.jsx
+|     |         |--- Hero.jsx
+|     |
+|     |--- fonts/
+|
+|--- lib/
+|     |--- utils.js
+|
+|--- utils/
+|     |--- dbConfig.js (Database configuration)
+|     |--- schema.js (Database schema)
+|
+|--- drizzle/
+|         |--- (Drizzle ORM-related files)
+|
+|--- drizzle.config.jsx (Drizzle configuration file)
+|--- jsconfig.jsx (JavaScript configuration file)
+|--- middleware.js (Middleware for handling requests)
