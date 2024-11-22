@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useParams } from 'next/navigation'; 
+import { useParams } from 'next/navigation';
 import { useForm, Controller } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -13,7 +13,7 @@ import moment from 'moment/moment';
 import { LoaderCircleIcon } from 'lucide-react';
 
 const ExpensesComp = ({ refreshData }) => {
-    const { id } = useParams();  
+    const { id } = useParams();
     const { control, handleSubmit, reset, formState: { errors } } = useForm({
         defaultValues: {
             name: '',
@@ -41,7 +41,7 @@ const ExpensesComp = ({ refreshData }) => {
                 .values({
                     name,
                     amount,
-                    budgetId: id,  
+                    budgetId: id,
                     createdBy: moment().format('DD-MMM-YYYY').toUpperCase(),
                 })
                 .returning({ insertedId: Expenses.id });
@@ -134,7 +134,7 @@ const ExpensesComp = ({ refreshData }) => {
                                     className="bg-blue-600 text-zinc-200 px-4 py-2 rounded hover:bg-blue-800"
                                     disabled={loading} // Disable button during loading
                                 >
-                                    {loading ? <LoaderCircleIcon className='animate-spin text-zinc-200'/> : "Add"} {/* Show loading text */}
+                                    {loading ? <LoaderCircleIcon className='animate-spin text-zinc-200' /> : "Add"} {/* Show loading text */}
                                 </Button>
                             </div>
                         </form>

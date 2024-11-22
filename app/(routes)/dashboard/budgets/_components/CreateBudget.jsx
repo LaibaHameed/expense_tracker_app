@@ -1,4 +1,14 @@
-import { Loader, LoaderCircle, SplineIcon } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
+import React, { useState, useEffect, useCallback } from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import EmojiPicker from 'emoji-picker-react';
+import { db } from '@/utils/dbConfig';
+import { Budgets } from '@/utils/schema';
+import { useUser } from '@clerk/nextjs';
+import { toast } from 'sonner';
+import { eq } from 'drizzle-orm';
 
 const CreateBudget = ({ refreshData }) => {
     const [emojiIcon, setEmojiIcon] = useState('😊');
@@ -194,9 +204,9 @@ const CreateBudget = ({ refreshData }) => {
                                 <Button
                                     type="submit"
                                     className="bg-blue-600 text-zinc-200 px-4 py-2 rounded hover:bg-blue-800"
-                                    disabled={loading || !isNameUnique} 
+                                    disabled={loading || !isNameUnique}
                                 >
-                                    {loading ? <LoaderCircle className="animate-spin text-zinc-200"/> : "Create"} 
+                                    {loading ? <LoaderCircle className="animate-spin text-zinc-200" /> : "Create"}
                                 </Button>
                             </div>
                         </form>
