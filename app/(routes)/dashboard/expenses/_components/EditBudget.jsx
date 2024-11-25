@@ -42,13 +42,25 @@ const EditBudget = ({ budgetInfo, refreshData }) => {
         };
     };
 
+    const capitalizeWords = (str) => {
+        return str
+            .toLowerCase()
+            .split(" ")
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(" ");
+    };
+
     const checkBudgetName = async (budgetName) => {
-        if (!budgetName) return;
+        if (!budgetName) {
+            console.warn("Missing budgetName or userEmail.");
+            return;
+        }
+        const capitalizedBudgetName = capitalizeWords(budgetName);
         try {
             const existingBudget = await db
                 .select()
                 .from(Budgets)
-                .where(eq(Budgets.name, budgetName))
+                .where(eq(Budgets.name, capitalizedBudgetName))
                 .execute();
 
             setIsNameUnique(existingBudget.length === 0);
@@ -73,11 +85,12 @@ const EditBudget = ({ budgetInfo, refreshData }) => {
 
     const onSubmit = async (data) => {
         const { name, amount } = data;
+        const capitalizedName = capitalizeWords(name);
         try {
             const result = await db
                 .update(Budgets)
                 .set({
-                    name,
+                    name: capitalizedName,
                     amount,
                     icon: emojiIcon,
                 })
@@ -160,7 +173,14 @@ const EditBudget = ({ budgetInfo, refreshData }) => {
                             </div>
 
                             <div className="flex justify-end space-x-2">
-                                <Button onClick={() => setIsDialogOpen(false)} type="button" className="bg-gray-300 text-black px-4 py-2 rounded hover:text-zinc-200 hover:bg-slate-500">
+                                <Button onClick={() => {
+                                    setIsDialogOpen(false);
+                                    reset({
+                                        name: '',
+                                        amount: '',
+                                    });
+                                    setIsNameUnique(true);
+                                }} type="button" className="bg-gray-300 text-black px-4 py-2 rounded hover:text-zinc-200 hover:bg-slate-500">
                                     Cancel
                                 </Button>
                                 <Button

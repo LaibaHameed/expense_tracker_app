@@ -84,10 +84,9 @@ const Page = ({ params }) => {
         .returning();
       console.log(result);
     }
-
+    
     toast('Budget Deleted !')
-    route.refresh('dashboard/budgets')
-
+    route.push('/dashboard/budgets');
   }
 
   useEffect(() => {
@@ -104,7 +103,7 @@ const Page = ({ params }) => {
           My Expenses
         </h1>
 
-        <div className='flex items-center justify-center gap-2 sm:flex-col'>
+        <div className='flex items-center justify-center gap-2 sm:flex-col md:flex-row'>
           <EditBudget budgetInfo={budgetInfo} refreshData={() => getBudgetInfo()} />
           <Button className='flex gap-2 bg-red-700 shadow-sm text-zinc-300 hover:bg-red-800 hover:shadow-zinc-400' onClick={() => setIsDialogOpen(true)} > <Trash /> Delete </Button>
         </div>

@@ -44,20 +44,28 @@ const CreateBudget = ({ refreshData }) => {
         };
     };
 
+    const capitalizeWords = (str) => {
+        return str
+            .toLowerCase()
+            .split(" ")
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(" ");
+    };
+    
     const checkBudgetName = async (budgetName) => {
         if (!budgetName || !userEmail) return;
+        const capitalizedBudgetName = capitalizeWords(budgetName);
         try {
             const existingBudget = await db
                 .select()
                 .from(Budgets)
                 .where(eq(Budgets.createdBy, userEmail))
-                .where(eq(Budgets.name, budgetName))
+                .where(eq(Budgets.name, capitalizedBudgetName)) // Case-insensitive check
                 .execute();
-
-            setIsNameUnique(existingBudget.length === 0);
+            setIsNameUnique(existingBudget.length === 0); // Set name uniqueness
         } catch (error) {
             console.error("Error checking budget name:", error);
-            setIsNameUnique(true);
+            setIsNameUnique(true); // Allow submission in case of an error
         }
     };
 
@@ -80,13 +88,13 @@ const CreateBudget = ({ refreshData }) => {
             toast.error('Budget name already exists!');
             return;
         }
-
+        const capitalizedName = capitalizeWords(name);
         setLoading(true); // Set loading to true when submission starts
         try {
             const result = await db
                 .insert(Budgets)
                 .values({
-                    name,
+                    name: capitalizedName,
                     amount,
                     icon: emojiIcon,
                     createdBy: userEmail,
@@ -195,7 +203,14 @@ const CreateBudget = ({ refreshData }) => {
 
                             <div className="flex justify-end space-x-2">
                                 <Button
-                                    onClick={() => setIsDialogOpen(false)}
+                                    onClick={() => {
+                                        setIsDialogOpen(false);
+                                        reset({
+                                            name: '',
+                                            amount: '',
+                                        });
+                                        setIsNameUnique(true);
+                                    }}
                                     type="button"
                                     className="bg-gray-300 text-black px-4 py-2 rounded hover:text-zinc-200 hover:bg-slate-500"
                                 >
